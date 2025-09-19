@@ -8,12 +8,18 @@ namespace impl
 {
 
 GurobiLPSolver::GurobiLPSolver(const TetMeshProps& meshProps, double scaling, const ISPQuantizer::Decomposition& decomp)
+    try
     : TetMeshNavigator(meshProps), MCMeshNavigator(meshProps), BaseLPSolver(meshProps, scaling, decomp), _lpenv(true)
 {
     _lpenv.set(GRB_IntParam_LogToConsole, false);
     _lpenv.set(GRB_IntParam_Threads, 1);
     _lpenv.start();
-}
+} catch (GRBException e)
+    {
+        LOG(ERROR) << "QGP3D::GurobLPSolver constructor: Gurobi exception, errcode: " << e.getErrorCode();
+        LOG(ERROR) << "Gurobi error message: " << e.getMessage();
+        throw e;
+    }
 
 void GurobiLPSolver::setupLPBase()
 {

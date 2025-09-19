@@ -10,12 +10,18 @@ namespace impl
 
 GurobiIQPSolver::GurobiIQPSolver(
     TetMeshProps& meshProps, double scaling, double varLowerBound, double maxSeconds, double individualArcFactor)
+    try
     : TetMeshNavigator(meshProps), TetMeshManipulator(meshProps), MCMeshNavigator(meshProps),
       MCMeshManipulator(meshProps), BaseIQPSolver(scaling, varLowerBound, maxSeconds, individualArcFactor),
       _env(true), _model(
         (_env.set(GRB_IntParam_LogToConsole, true),_env.start(), _env))
 {
-}
+} catch (GRBException e)
+    {
+        LOG(ERROR) << "QGP3D::GurobIQPSolver constructor: Gurobi exception, errcode: " << e.getErrorCode();
+        LOG(ERROR) << "Gurobi error message: " << e.getMessage();
+        throw e;
+    }
 
 void GurobiIQPSolver::setupDefaultOptions()
 {
