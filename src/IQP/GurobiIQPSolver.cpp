@@ -252,7 +252,7 @@ BaseIQPSolver::RetCode GurobiIQPSolver::solve()
     }
     catch (GRBException e)
     {
-        LOG(ERROR) << "Gurobi exception, errcode: " << e.getErrorCode();
+        LOG(ERROR) << "QGP3D::GurobIQPSolver: Gurobi exception, errcode: " << e.getErrorCode();
         LOG(ERROR) << "Gurobi error message: " << e.getMessage();
         return SOLVER_ERROR;
     }
